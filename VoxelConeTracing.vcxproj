@@ -140,6 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\CornellScene.cpp" />
+    <ClCompile Include="source\Renderer.cpp" />
+    <ClCompile Include="source\Scene.cpp" />
+    <ClCompile Include="source\Texture3D.cpp" />
     <ClCompile Include="source\VCTSystem.cpp" />
     <ClCompile Include="tools\glad.c" />
     <ClCompile Include="tools\Maths.cpp" />
@@ -150,6 +154,10 @@
     <ClCompile Include="VoxelConeTracing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\CornellScene.h" />
+    <ClInclude Include="source\Renderer.h" />
+    <ClInclude Include="source\Scene.h" />
+    <ClInclude Include="source\Texture3D.h" />
     <ClInclude Include="source\VCTSystem.h" />
     <ClInclude Include="tools\Camera.h" />
     <ClInclude Include="tools\MaterialSetting.h" />
@@ -163,6 +171,16 @@
     <ClInclude Include="tools\stb_image_write.h" />
     <ClInclude Include="tools\Transform.h" />
     <ClInclude Include="tools\Utility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shaders\render_frag.fs" />
+    <None Include="source\shaders\render_vert.vs" />
+    <None Include="source\shaders\voxelize_frag.fs" />
+    <None Include="source\shaders\voxelize_geom.gs" />
+    <None Include="source\shaders\voxelize_vert.vs" />
+    <None Include="source\shaders\voxel_visualize_frag.fs" />
+    <None Include="source\shaders\voxel_visualize_geom.gs" />
+    <None Include="source\shaders\voxel_visualize_vert.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

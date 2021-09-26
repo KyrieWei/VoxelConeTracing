@@ -1,7 +1,10 @@
 #pragma once
 #include <string>
-#include <GLFW/glfw3.h>
 #include "../tools/Singleton.h"
+#include "CornellScene.h"
+#include "Renderer.h"
+#include <GLFW/glfw3.h>
+
 
 class VCTSystem : public Singleton<VCTSystem>
 {
@@ -9,6 +12,9 @@ private:
 	int width, height;
 	std::string title;
 	GLFWwindow* window;
+
+	CornellScene cornellscene;
+	Renderer renderer;
 
 public:
 	typedef std::shared_ptr<VCTSystem> ptr;

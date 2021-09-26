@@ -40,8 +40,8 @@ public:
 
 	void Draw(Shader& shader)
 	{
-        shader.use();
-        shader.setMat4("model", transform.getTransformMatrix());
+        //shader.use();
+        //shader.setMat4("model", transform.getTransformMatrix());
 
 		for (unsigned int i = 0; i < meshes.size(); i++)
 		{

@@ -16,6 +16,9 @@
     <Filter Include="tools">
       <UniqueIdentifier>{1dc21f06-0735-46d5-9802-58be7138944d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{b1dbe8c1-8b59-47ec-9e6d-4cd495071d0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VoxelConeTracing.cpp">
@@ -40,6 +43,18 @@
       <Filter>tools</Filter>
     </ClCompile>
     <ClCompile Include="source\VCTSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CornellScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Texture3D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,5 +98,43 @@
     <ClInclude Include="tools\Singleton.h">
       <Filter>tools</Filter>
     </ClInclude>
+    <ClInclude Include="source\Renderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CornellScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Texture3D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shaders\render_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\render_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxelize_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxelize_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxelize_geom.gs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxel_visualize_vert.vs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxel_visualize_frag.fs">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\voxel_visualize_geom.gs">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -52,7 +52,18 @@ void VCTSystem::init()
         return;
     }
 
+    //scene init
+    cornellscene.init(width, height);
 
+    //renderer init
+    renderer.init(cornellscene);
+
+    //voxelization
+    renderer.initVoxelization(cornellscene);
+    renderer.voxelize(cornellscene);
+
+    //voxel visualization
+    renderer.initVoxelVisualization(cornellscene);
 }
 
 void VCTSystem::run()
@@ -60,8 +71,6 @@ void VCTSystem::run()
     init();
 
     glViewport(0, 0, width, height);
-
-    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -71,12 +80,15 @@ void VCTSystem::run()
 
         processInput(window, deltaTime);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        renderer.voxelize(cornellscene);
+        renderer.render(cornellscene, Renderer::RenderingMode::VOXEL_CONE_TRACING);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    renderer.endFrame();
+    glfwTerminate();
 }
 
 void VCTSystem::setWindowSize(const int _width, const int _height)
@@ -110,12 +122,12 @@ void VCTSystem::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    //getSingleton()->getPBRenderer()->getCamera()->ProcessMouseMovement(xoffset, yoffset);
+    getSingleton()->cornellscene.camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void VCTSystem::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    //getSingleton()->getPBRenderer()->getCamera()->ProcessMouseScroll(yoffset);
+    getSingleton()->cornellscene.camera.ProcessMouseScroll(yoffset);
 }
 
 void VCTSystem::processInput(GLFWwindow* window, float deltaTime)
@@ -123,14 +135,12 @@ void VCTSystem::processInput(GLFWwindow* window, float deltaTime)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    //Camera::ptr camera = getSingleton()->getPBRenderer()->getCamera();
-
-    //if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    //    camera->ProcessKeyboard(FORWARD, deltaTime);
-    //if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    //    camera->ProcessKeyboard(BACKWARD, deltaTime);
-    //if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    //    camera->ProcessKeyboard(LEFT, deltaTime);
-    //if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    //    camera->ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        getSingleton()->cornellscene.camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        getSingleton()->cornellscene.camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        getSingleton()->cornellscene.camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        getSingleton()->cornellscene.camera.ProcessKeyboard(RIGHT, deltaTime);
 }
