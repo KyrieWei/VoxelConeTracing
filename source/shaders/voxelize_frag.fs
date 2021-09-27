@@ -3,7 +3,7 @@
 in vec3 FragPos;
 
 uniform vec3 boxMin;
-uniform vec3 step;
+uniform vec3 scale;
 
 out vec4 fragColor;
 
@@ -12,7 +12,7 @@ layout(RGBA8) uniform image3D texture3D;
 void main()
 {
     vec3 curr = FragPos - boxMin;
-    ivec3 coord = ivec3(curr * step);
+    ivec3 coord = ivec3(curr * scale);
 
     clamp(coord.x, 0, 64);
     clamp(coord.y, 0, 64);
@@ -22,5 +22,5 @@ void main()
 
     imageStore(texture3D, coord, res);
 
-    fragColor = res;
+    fragColor = vec4(float(coord.x) / 64, float(coord.y) / 64, float(coord.z) / 64, 1.0);
 }

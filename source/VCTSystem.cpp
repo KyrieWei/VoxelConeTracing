@@ -81,7 +81,7 @@ void VCTSystem::run()
         processInput(window, deltaTime);
 
         renderer.voxelize(cornellscene);
-        renderer.render(cornellscene, Renderer::RenderingMode::VOXEL_CONE_TRACING);
+        renderer.render(cornellscene, Renderer::RenderingMode::VOXELIZATION_VISUALIZATION);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

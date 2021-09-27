@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.h"
 #include "Texture3D.h"
+#include "../tools/standardModel.h"
 
 class Renderer
 {
@@ -37,6 +38,8 @@ public:
 	//voxel visualization
 	GLuint voxel_VAO, voxel_VBO;
 	std::vector<glm::vec3> voxelPos;
+	std::vector<glm::mat4> voxelMatrix;
+	InstanceCube instanceCube;
 
 	void initVoxelVisualization(Scene& scene);
 	void voxelVisualization(Scene& scene);
