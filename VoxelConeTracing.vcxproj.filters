@@ -57,6 +57,9 @@
     <ClCompile Include="source\Texture3D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="source\PointLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tools\Camera.h">
@@ -108,6 +111,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="source\Texture3D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PointLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

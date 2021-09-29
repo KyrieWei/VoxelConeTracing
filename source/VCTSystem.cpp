@@ -80,7 +80,9 @@ void VCTSystem::run()
 
         processInput(window, deltaTime);
 
-        renderer.voxelize(cornellscene);
+        //cornellscene.update(currentFrame);
+
+        //renderer.voxelize(cornellscene);
         renderer.render(cornellscene, Renderer::RenderingMode::VOXELIZATION_VISUALIZATION);
 
         glfwSwapBuffers(window);

@@ -37,6 +37,7 @@ void Renderer::voxelize(Scene& scene)
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
 
+
 	//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -84,6 +85,16 @@ void Renderer::initVoxelVisualization(Scene& scene)
 		}
 	}
 
+	if (voxelMatrix.empty())
+	{
+		std::cout << "no voxel point!" << std::endl;
+		return;
+	}
+	else
+	{
+		std::cout << "voxel points: " << voxelMatrix.size() << std::endl;
+	}
+
 	instanceCube.init();
 	instanceCube.setInstanceMatrix(voxelMatrix, GL_STATIC_DRAW);
 }
@@ -107,13 +118,16 @@ void Renderer::render(Scene& scene, RenderingMode renderMode)
 void Renderer::renderScene(Scene& scene)
 {
 	glEnable(GL_MULTISAMPLE);
+	
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	uploadCameraInfo(voxelCamera, render_shader);
+	uploadCameraInfo(scene.camera, render_shader);
+	uploadLightInfo(scene, render_shader);
+	setRenderSetting(render_shader);
 
 	scene.draw(render_shader);
 }
@@ -144,7 +158,21 @@ void Renderer::uploadCameraInfo(const Camera& camera, Shader& shader)
 {
 	shader.use();
 
-	shader.setMat4("model", glm::mat4(1.0));
 	shader.setMat4("view", camera.GetViewMatrix());
 	shader.setMat4("projection", camera.GetProjectMatrix());
+	shader.setVec3("cameraPosition", camera.Position);
+}
+
+void Renderer::uploadLightInfo(Scene& scene, Shader& shader)
+{
+	for (int i = 0; i < scene.pointLights.size(); i++)
+		scene.pointLights[i].Upload(shader, i);
+
+	shader.setInt("numberOfLights", scene.pointLights.size());
+}
+
+void Renderer::setRenderSetting(Shader& shader)
+{
+	shader.use();
+	shader.setBool("settings.directLight", directLight);
 }

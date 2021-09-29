@@ -18,13 +18,17 @@ public:
 	void endFrame();
 
 	void uploadCameraInfo(const Camera& camera, Shader& shader);
-
+	void uploadLightInfo(Scene& scene, Shader& shader);
+	void setRenderSetting(Shader& shader);
 public:
 
 	//shaders
 	Shader render_shader;
 	Shader voxelize_shader;
 	Shader voxelVisualize_shader;
+
+	//settings
+	bool directLight = true;
 
 	//voxelization
 	glm::uvec3 voxelTextureSize = glm::uvec3(64, 64, 64);

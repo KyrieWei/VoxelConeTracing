@@ -40,8 +40,9 @@ public:
 
 	void Draw(Shader& shader)
 	{
-        //shader.use();
-        //shader.setMat4("model", transform.getTransformMatrix());
+        //TODO
+        shader.use();
+        shader.setMat4("model", transform.getTransformMatrix());
 
 		for (unsigned int i = 0; i < meshes.size(); i++)
 		{
@@ -54,6 +55,13 @@ public:
     {
         min = m_min;
         max = m_max;
+    }
+
+    void updateBBox()
+    {
+        glm::mat4 matrix = transform.getTransformMatrix();
+        m_min = glm::vec3(matrix * glm::vec4(m_min, 1.0f));
+        m_max = glm::vec3(matrix * glm::vec4(m_max, 1.0f));
     }
 
 private:
