@@ -3,7 +3,7 @@
 void Renderer::init(Scene& scene)
 {
 	render_shader = Shader("source/shaders/render_vert.vs", "source/shaders/render_frag.fs");
-	voxelize_shader = Shader("source/shaders/voxelize_vert.vs", "source/shaders/voxelize_frag.fs");
+	voxelize_shader = Shader("source/shaders/voxelize_vert.vs", "source/shaders/voxelize_frag.fs", "source/shaders/voxelize_geom.gs");
 	voxelVisualize_shader = Shader("source/shaders/voxel_visualize_vert.vs", "source/shaders/voxel_visualize_frag.fs"); //, "source/shaders/voxel_visualize_geom.gs");
 }
 
@@ -21,9 +21,28 @@ void Renderer::initVoxelization(Scene& scene)
 	cameraPosZ.x = (min.x + max.x) * 0.5f;
 	cameraPosZ.y = (min.y + max.y) * 0.5f;
 	cameraPosZ.z = max.z + offset;
+	Camera cameraZ(cameraPosZ);
+	cameraZ.setOrthographicProject(-range.x * 0.51f, range.x * 0.51f, -range.y * 0.51f, range.y * 0.51f, 0.1f, range.z * 1.2f + offset);
 
-	voxelCamera = Camera(cameraPosZ);
-	voxelCamera.setOrthographicProject(-range.x * 0.51f, range.x * 0.51f, -range.y * 0.51f, range.y * 0.51f, 0.1f, range.z * 1.2f + offset);
+	glm::vec3 cameraPosX;
+	cameraPosX.x = max.x + offset;
+	cameraPosX.y = (min.y + max.y) * 0.5f;
+	cameraPosX.z = (min.z + max.z) * 0.5f;
+	Camera cameraX(cameraPosX);
+	cameraX.setOrthographicProject(-range.z * 0.51f, range.z * 0.51f, -range.y * 0.51f, range.y * 0.51f, 0.1f, range.x * 1.2f + offset);
+
+	glm::vec3 cameraPosY;
+	cameraPosY.x = (min.x + max.x) * 0.5f;
+	cameraPosY.y = max.y + offset;
+	cameraPosY.z = (min.z + max.z) * 0.5f;
+	Camera cameraY(cameraPosY);
+	cameraY.setOrthographicProject(-range.x * 0.51f, range.x * 0.51f, -range.z * 0.51f, range.z * 0.51f, 0.1f, range.y * 1.2f + offset);
+
+	voxelize_shader.use();
+	voxelize_shader.setMat4("viewProject[0]", cameraX.GetProjectMatrix() * cameraX.GetViewMatrix());
+	voxelize_shader.setMat4("viewProject[1]", cameraY.GetProjectMatrix() * cameraY.GetViewMatrix());
+	voxelize_shader.setMat4("viewProject[2]", cameraZ.GetProjectMatrix() * cameraZ.GetViewMatrix());
+
 }
 
 void Renderer::voxelize(Scene& scene)
@@ -43,8 +62,8 @@ void Renderer::voxelize(Scene& scene)
 
 	voxelize_shader.use();
 	voxelize_shader.setVec3("boxMin", scene.bb_min);
-	voxelize_shader.setMat4("view", voxelCamera.GetViewMatrix());
-	voxelize_shader.setMat4("projection", voxelCamera.GetProjectMatrix());
+	//voxelize_shader.setMat4("view", voxelCamera.GetViewMatrix());
+	//voxelize_shader.setMat4("projection", voxelCamera.GetProjectMatrix());
 
 	glm::vec3 scale = glm::vec3((float)voxelTextureSize.x / range.x, (float)voxelTextureSize.y / range.y, (float)voxelTextureSize.z / range.z);
 	voxelize_shader.setVec3("scale", scale);
@@ -141,8 +160,6 @@ void Renderer::voxelVisualization(Scene& scene)
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	voxelVisualize_shader.use();
-	voxelVisualize_shader.setFloat("cubeScale", 0.01f);
 	uploadCameraInfo(scene.camera, voxelVisualize_shader);
 
 	instanceCube.Draw(voxelVisualize_shader, voxelMatrix.size());
