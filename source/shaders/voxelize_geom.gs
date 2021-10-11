@@ -3,7 +3,10 @@
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
+in vec3 GeomNormal[];
+
 out vec3 FragPos;
+out vec3 FragNormal;
 
 uniform mat4 viewProject[3];
 
@@ -32,16 +35,21 @@ uint selectViewProject()
 
 void main()
 {
+	
+	
 	uint projectIndex = selectViewProject();
 	FragPos = gl_in[0].gl_Position.xyz;
+	FragNormal = GeomNormal[0];
 	gl_Position = viewProject[projectIndex] * gl_in[0].gl_Position;
 	EmitVertex();
 	
 	FragPos = gl_in[1].gl_Position.xyz;
+	FragNormal = GeomNormal[1];
 	gl_Position = viewProject[projectIndex] * gl_in[1].gl_Position;
 	EmitVertex();
 
 	FragPos = gl_in[2].gl_Position.xyz;
+	FragNormal = GeomNormal[2];
 	gl_Position = viewProject[projectIndex] * gl_in[2].gl_Position;
 	EmitVertex();
 

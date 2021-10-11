@@ -8,10 +8,12 @@ layout (location = 3) in mat4 instanceMatrix;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 Normal;
+out vec3 WorldPos;
+out vec3 WorldNormal;
 
 void main()
 {
-	Normal = aNormal;
-	gl_Position = projection * view * instanceMatrix * vec4(aPos, 1.0);
+	WorldPos = vec3(instanceMatrix * vec4(aPos, 1.0));
+	WorldNormal = normalize(mat3(transpose(inverse(instanceMatrix))) * aNormal);
+	gl_Position = projection * view * vec4(WorldPos, 1.0);
 }
