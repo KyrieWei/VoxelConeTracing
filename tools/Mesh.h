@@ -86,6 +86,7 @@ public:
 			shader.setFloat("material.specularReflectivity", materialSetting.specularReflectivity);
 			shader.setFloat("material.diffuseReflectivity", materialSetting.diffuseReflectivity);
 			shader.setFloat("material.emissivity", materialSetting.emissivity);
+			shader.setFloat("material.transparency", materialSetting.transparency);
 			
 		}
 

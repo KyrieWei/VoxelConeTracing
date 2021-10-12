@@ -9,7 +9,6 @@ uniform sampler3D texture3D;
 
 uniform vec3 boxMin;
 uniform vec3 scale;
-uniform vec3 dim;
 
 void main()
 {

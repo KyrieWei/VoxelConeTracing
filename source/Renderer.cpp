@@ -69,8 +69,9 @@ void Renderer::voxelize(Scene& scene)
 	voxelTexture->Activate(voxelize_shader, "texture3D", 0);
 	glBindImageTexture(0, voxelTexture->textureID, 0, GL_TRUE, 0, GL_READ_WRITE, GL_RGBA8);
 
-
 	scene.draw(voxelize_shader);
+
+	glGenerateTextureMipmap(voxelTexture->textureID);
 }
 
 void Renderer::initVoxelVisualization(Scene& scene)
@@ -134,7 +135,6 @@ void Renderer::render(Scene& scene, RenderingMode renderMode)
 	{
 	case RenderingMode::VOXELIZATION_VISUALIZATION:
 		voxelVisualization(scene);
-		//voxelize(scene);
 		break;
 	case RenderingMode::VOXEL_CONE_TRACING:
 		renderScene(scene);
@@ -157,6 +157,16 @@ void Renderer::renderScene(Scene& scene)
 	uploadCameraInfo(scene.camera, render_shader);
 	uploadLightInfo(scene, render_shader);
 	setRenderSetting(render_shader);
+
+	voxelTexture->Activate(render_shader, "texture3D", 0);
+
+	glm::vec3 range(scene.bb_max - scene.bb_min);
+	glm::vec3 scale = glm::vec3(1.0f / range.x, 1.0f / range.y, 1.0f / range.z);
+
+	render_shader.use();
+	render_shader.setVec3("boxMin", scene.bb_min);
+	render_shader.setVec3("scale", scale);
+	render_shader.setFloat("VOXEL_SIZE", 1.0f / voxelTextureSize.x);
 
 	scene.draw(render_shader);
 }
@@ -203,5 +213,6 @@ void Renderer::uploadLightInfo(Scene& scene, Shader& shader)
 void Renderer::setRenderSetting(Shader& shader)
 {
 	shader.use();
+	shader.setBool("settings.indirectDiffuseLight", indirectDiffuseLight);
 	shader.setBool("settings.directLight", directLight);
 }

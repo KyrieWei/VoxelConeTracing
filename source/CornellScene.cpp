@@ -8,7 +8,7 @@ void CornellScene::init(int viewportwidth, int viewportheight)
 	Model cornellBox("source/assets/cornell.obj");
 
 	//Cornel box
-	cornellBox.meshes[0].materialSetting = MaterialSetting(glm::vec3(0.35f, 0.38f, 1.0f));   //Green wall
+	cornellBox.meshes[0].materialSetting = MaterialSetting(glm::vec3(0.2f, 1.0f, 0.2f));   //Green wall
 	cornellBox.meshes[1].materialSetting = MaterialSetting(glm::vec3(0.97f, 0.97f, 0.97f));  //Floor
 	cornellBox.meshes[2].materialSetting = MaterialSetting(glm::vec3(0.97f, 0.97f, 0.97f));  //Roof
 	cornellBox.meshes[3].materialSetting = MaterialSetting(glm::vec3(1.0f, 0.26f, 0.27f));   //Red wall

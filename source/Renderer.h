@@ -28,6 +28,7 @@ public:
 	Shader voxelVisualize_shader;
 
 	//settings
+	bool indirectDiffuseLight = true;
 	bool directLight = true;
 
 	//voxelization
