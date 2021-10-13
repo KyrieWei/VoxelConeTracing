@@ -31,9 +31,11 @@ struct Material
 {
     vec3 diffuseColor;
     vec3 specularColor;
+    float specularDiffusion;
     float diffuseReflectivity;
     float specularReflectivity;
     float emissivity;
+    float refractiveIndex;
     float transparency;
 };
 
@@ -58,6 +60,9 @@ uniform sampler3D texture3D;
 in vec3 worldPos;
 in vec3 worldNormal;
 
+
+vec3 normal = normalize(worldNormal);
+float MAX_DISTANCE = distance(vec3(abs(worldPos)), vec3(-1));
 
 //return a vector that is orghogonal to u
 vec3 orthogonal(vec3 u)
@@ -96,11 +101,46 @@ vec3 traceDiffuseVoxelCone(vec3 from, vec3 direction)
         float level = log2(l);
         float ll = (level + 1) * (level + 1);
         vec4 voxel = textureLod(texture3D, coord, min(MIPMAP_HARDCAP, level));
-        acc += 0.075 * ll * voxel * pow(1 - voxel.a, 2); 
+        acc += 0.75 * ll * voxel * pow(1 - voxel.a, 2); 
         dist += ll * VOXEL_SIZE * 2;
     }
 
     return pow(acc.rgb * 2.0, vec3(1.5));
+}
+
+//trace a specular voxel cone
+vec3 traceSpecularVoxelCone(vec3 from, vec3 direction)
+{
+    direction = normalize(direction);
+
+    float OFFSET = 8 * VOXEL_SIZE;
+    float STEP = VOXEL_SIZE;
+
+    from += OFFSET * normal;
+
+    vec4 acc = vec4(0.0f);
+    float dist = OFFSET;
+
+    //trace
+    while(dist < MAX_DISTANCE && acc.a < 1)
+    {
+        vec3 c = from + dist * direction;
+        vec3 curr = c - boxMin;
+        vec3 coord = curr * scale;
+
+        coord.x = clamp(coord.x, 0, 1);
+        coord.y = clamp(coord.y, 0, 1);
+        coord.z = clamp(coord.z, 0, 1);
+
+        float level = 0.1 * material.specularDiffusion * log2(1 + dist / VOXEL_SIZE);
+        vec4 voxel = textureLod(texture3D, coord, min(MIPMAP_HARDCAP, level));
+        float f = 1 - acc.a;
+        acc.rgb += 0.25 * (1 + material.specularDiffusion) * voxel.rgb * voxel.a * f;
+        acc.a += 0.25 * voxel.a * f;
+        dist += STEP * (1.0f + 0.125f * level);
+    }
+
+    return 1.0 * pow(material.specularDiffusion + 1, 0.8) * acc.rgb;
 }
 
 //calculate indirect diffuse light using voxel cone tracing.
@@ -112,7 +152,6 @@ vec3 indirectDiffuseLight()
     float w[3] = {1.0, 1.0, 1.0}; // cone weights
 
     //find a base for the side cones with the normal as one of its base vectors
-    vec3 normal = normalize(worldNormal);
     vec3 ortho = normalize(orthogonal(normal));
     vec3 ortho2 = normalize(cross(ortho, normal));
 
@@ -161,6 +200,21 @@ vec3 indirectDiffuseLight()
     return DIFFUSE_INDIRECT_FACTOR * material.diffuseReflectivity * acc * (material.diffuseColor + vec3(0.001f));
 }
 
+//calculate indirect specular light using voxel cone tracing
+vec3 indirectSpecularLight(vec3 viewDirection)
+{
+    vec3 reflection = normalize(reflect(viewDirection, normal));
+    return material.specularReflectivity * material.specularColor * traceSpecularVoxelCone(worldPos, reflection);
+}
+
+//calculate refractive light using voxel cone tracing
+vec3 indirectRefractiveLight(vec3 viewDirection)
+{
+    vec3 refraction = refract(viewDirection, normal, 1.0 / material.refractiveIndex);
+    vec3 cmix = mix(material.specularColor, 0.5 * (material.specularColor + vec3(1)), material.transparency);
+    return cmix * traceSpecularVoxelCone(worldPos, refraction);
+}
+
 float attenuate(float dist)
 {
     dist *= DIST_FACTOR;
@@ -172,7 +226,7 @@ vec3 calculateDirectLight(const PointLight light, const vec3 viewDirection)
     vec3 lightDirection = light.position - worldPos;
     float distanceToLight = length(lightDirection);
     lightDirection = normalize(lightDirection);
-    float lightAngle = dot(worldNormal, lightDirection);
+    float lightAngle = dot(normal, lightDirection);
 
     //diffuse light
     float diffuseAngle = max(lightAngle, 0.0f);
@@ -205,6 +259,14 @@ void main()
     //Indirect diffuse light
     if(settings.indirectDiffuseLight && material.diffuseReflectivity * (1.0f - material.transparency) > 0.01f)
         color.rgb += indirectDiffuseLight();
+
+    //Indirect specular light
+    if(settings.indirectSpecularLight && material.specularReflectivity * (1.0f - material.transparency) > 0.01f)
+        color.rgb += indirectSpecularLight(viewDirection);
+
+    //Indirect Transparency
+    if(material.transparency > 0.01f)
+        color.rgb = mix(color.rgb, indirectRefractiveLight(viewDirection), material.transparency);
 
     //Emissivity
     color.rgb += material.emissivity * material.diffuseColor;

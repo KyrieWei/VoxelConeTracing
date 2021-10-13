@@ -8,7 +8,7 @@ void CornellScene::init(int viewportwidth, int viewportheight)
 	Model cornellBox("source/assets/cornell.obj");
 
 	//Cornel box
-	cornellBox.meshes[0].materialSetting = MaterialSetting(glm::vec3(0.2f, 1.0f, 0.2f));   //Green wall
+	cornellBox.meshes[0].materialSetting = MaterialSetting(glm::vec3(0.1f, 1.0f, 0.1f));   //Green wall
 	cornellBox.meshes[1].materialSetting = MaterialSetting(glm::vec3(0.97f, 0.97f, 0.97f));  //Floor
 	cornellBox.meshes[2].materialSetting = MaterialSetting(glm::vec3(0.97f, 0.97f, 0.97f));  //Roof
 	cornellBox.meshes[3].materialSetting = MaterialSetting(glm::vec3(1.0f, 0.26f, 0.27f));   //Red wall
@@ -37,7 +37,7 @@ void CornellScene::init(int viewportwidth, int viewportheight)
 	models.push_back(dragon);
 
 	Model lightSphere("source/assets/sphere.obj");
-	lightSphere.meshes[0].materialSetting = MaterialSetting(glm::vec3(1.0f, 1.0f, 1.0f), 8.0f, 0.0f, 0.0f);
+	lightSphere.meshes[0].materialSetting = MaterialSetting(glm::vec3(1.0f, 1.0f, 1.0f), 16.0f, 0.0f, 0.0f);
 	lightSphere.useMaterialSetting = true;
 
 	lightSphere.transform.position = glm::vec3(0, 0.5, 0.1);

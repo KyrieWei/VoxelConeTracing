@@ -83,9 +83,11 @@ public:
 			shader.use();
 			shader.setVec3("material.diffuseColor", materialSetting.diffuseColor);
 			shader.setVec3("material.specularColor", materialSetting.specularColor);
+			shader.setFloat("material.specularDiffusion", materialSetting.specularDiffusion);
 			shader.setFloat("material.specularReflectivity", materialSetting.specularReflectivity);
 			shader.setFloat("material.diffuseReflectivity", materialSetting.diffuseReflectivity);
 			shader.setFloat("material.emissivity", materialSetting.emissivity);
+			shader.setFloat("material.refractiveIndex", materialSetting.refractiveIndex);
 			shader.setFloat("material.transparency", materialSetting.transparency);
 			
 		}

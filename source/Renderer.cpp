@@ -214,5 +214,7 @@ void Renderer::setRenderSetting(Shader& shader)
 {
 	shader.use();
 	shader.setBool("settings.indirectDiffuseLight", indirectDiffuseLight);
+	shader.setBool("settings.indirectSpecularLight", indirectSpecularLight);
 	shader.setBool("settings.directLight", directLight);
+
 }

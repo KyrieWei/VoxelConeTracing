@@ -29,6 +29,7 @@ public:
 
 	//settings
 	bool indirectDiffuseLight = true;
+	bool indirectSpecularLight = true;
 	bool directLight = true;
 
 	//voxelization

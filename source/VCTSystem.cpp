@@ -80,9 +80,9 @@ void VCTSystem::run()
 
         processInput(window, deltaTime);
 
-        //cornellscene.update(currentFrame);
+        cornellscene.update(currentFrame);
 
-        //renderer.voxelize(cornellscene);
+        renderer.voxelize(cornellscene);
         renderer.render(cornellscene, Renderer::RenderingMode::VOXEL_CONE_TRACING);
 
         glfwSwapBuffers(window);
